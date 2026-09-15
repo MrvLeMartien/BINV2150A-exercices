@@ -19,34 +19,31 @@ recipesController.get("/", (req: Request, res: Response) => {
   LoggerService.info("[GET] /recipes");
 
   const filter: RecipeFilter = {};
-
-  if (isString(req.query.categoryId)) {
-    const categoryId = Number(req.query.categoryId);
-    if (!Number.isInteger(categoryId)) return res.sendStatus(400);
-    filter.categoryId = categoryId;
+  const { categoryId, authorId, search, ingredient, maxPrepTime } = req.query;
+  if (isString(categoryId)) {
+    const catId = Number(categoryId);
+    if (!Number.isInteger(catId)) return res.sendStatus(400);
+    filter.categoryId = catId;
   }
-  if (isString(req.query.authorId)) {
-    const authorId = Number(req.query.authorId);
-    if (!Number.isInteger(authorId)) return res.sendStatus(400);
-    filter.authorId = authorId;
+  if (isString(authorId)) {
+    const authId = Number(authorId);
+    if (!Number.isInteger(authId)) return res.sendStatus(400);
+    filter.authorId = authId;
   }
-  if (isString(req.query.search) && req.query.search.trim() !== "") {
-    filter.search = req.query.search.trim();
+  if (isString(search) && search.trim() !== "") {
+    filter.search = search.trim();
   }
-  if (isString(req.query.ingredient) && req.query.ingredient.trim() !== "") {
-    filter.ingredient = req.query.ingredient.trim();
+  if (isString(ingredient) && ingredient.trim() !== "") {
+    filter.ingredient = ingredient.trim();
   }
-  if (isString(req.query.maxPrepTime)) {
-    const maxPrepTime = Number(req.query.maxPrepTime);
-    if (!Number.isInteger(maxPrepTime) || maxPrepTime < 0) return res.sendStatus(400);
-    filter.maxPrepTime = maxPrepTime;
+  if (isString(maxPrepTime)) {
+    const maxPTime = Number(maxPrepTime);
+    if (!Number.isInteger(maxPTime) || maxPTime < 0) return res.sendStatus(400);
+    filter.maxPrepTime = maxPTime;
   }
 
   const recipes = RecipesService.getAll(filter);
-  const recipesDTO: RecipeDTO[] = [];
-  for (const recipe of recipes) {
-    recipesDTO.push(RecipesMapper.toDTO(recipe));
-  }
+  const recipesDTO = recipes.map(recipe => RecipesMapper.toDTO(recipe));
   return res.status(200).json(recipesDTO);
 });
 
@@ -57,10 +54,11 @@ recipesController.get("/", (req: Request, res: Response) => {
 recipesController.get("/:id", (req: Request, res: Response) => {
   LoggerService.info("[GET] /recipes/:id");
 
-  const id = Number(req.params.id);
-  if (!Number.isInteger(id) || id < 1) return res.sendStatus(400);
+  const { id } = req.params;
+  const recipeId = Number(id);
+  if (!Number.isInteger(recipeId) || recipeId < 1) return res.sendStatus(400);
 
-  const recipe = RecipesService.getById(id);
+  const recipe = RecipesService.getById(recipeId);
   if (!recipe) return res.sendStatus(404);
 
   return res.status(200).json(RecipesMapper.toDTO(recipe));
@@ -74,7 +72,7 @@ recipesController.post("/", AuthService.authorize, (req: AuthenticatedRequest, r
   LoggerService.info("[POST] /recipes");
 
   if (!req.user) return res.sendStatus(401);
-  const user = req.user;
+  const { user } = req;
 
   const body: unknown = req.body;
   if (!isNewRecipeDTO(body)) return res.sendStatus(400);
@@ -96,22 +94,23 @@ recipesController.put("/:id", AuthService.authorize, (req: AuthenticatedRequest,
   LoggerService.info("[PUT] /recipes/:id");
 
   if (!req.user) return res.sendStatus(401);
-  const user = req.user;
+  const { user } = req;
 
-  const id = Number(req.params.id);
-  if (!Number.isInteger(id) || id < 1) return res.sendStatus(400);
+  const { id } = req.params;
+  const recipeId = Number(id);
+  if (!Number.isInteger(recipeId) || recipeId < 1) return res.sendStatus(400);
 
   const body: unknown = req.body;
   if (!isNewRecipeDTO(body)) return res.sendStatus(400);
 
-  const recipe = RecipesService.getById(id);
+  const recipe = RecipesService.getById(recipeId);
   if (!recipe) return res.sendStatus(404);
 
   if (recipe.authorId !== user.id && user.role !== ERole.ADMIN) return res.sendStatus(403);
 
   if (!CategoriesService.getById(body.categoryId)) return res.sendStatus(400); // catégorie inconnue
 
-  const updated = RecipesService.update(id, RecipesMapper.fromNewDTO(body, recipe.authorId));
+  const updated = RecipesService.update(recipeId, RecipesMapper.fromNewDTO(body, recipe.authorId));
   if (!updated) return res.sendStatus(500);
 
   return res.sendStatus(204);
@@ -125,17 +124,18 @@ recipesController.delete("/:id", AuthService.authorize, (req: AuthenticatedReque
   LoggerService.info("[DELETE] /recipes/:id");
 
   if (!req.user) return res.sendStatus(401);
-  const user = req.user;
+  const { user } = req;
 
-  const id = Number(req.params.id);
-  if (!Number.isInteger(id) || id < 1) return res.sendStatus(400);
+  const { id } = req.params;
+  const recipeId = Number(id);
+  if (!Number.isInteger(recipeId) || recipeId < 1) return res.sendStatus(400);
 
-  const recipe = RecipesService.getById(id);
+  const recipe = RecipesService.getById(recipeId);
   if (!recipe) return res.sendStatus(404);
 
   if (recipe.authorId !== user.id && user.role !== ERole.ADMIN) return res.sendStatus(403);
 
-  if (!RecipesService.delete(id)) return res.sendStatus(500);
+  if (!RecipesService.delete(recipeId)) return res.sendStatus(500);
 
   return res.sendStatus(204);
 });

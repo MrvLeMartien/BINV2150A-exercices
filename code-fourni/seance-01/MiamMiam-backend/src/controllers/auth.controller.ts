@@ -40,8 +40,7 @@ authController.post("/login", (req: Request, res: Response) => {
   const body: unknown = req.body;
   if (!isCredentialsDTO(body)) return res.sendStatus(400);
 
-  const email = body.email;
-  const password = body.password;
+  const { email, password } = body;
 
   const token = AuthService.login(email, password);
   if (!token) return res.sendStatus(401);
@@ -58,7 +57,7 @@ authController.get("/me", AuthService.authorize, (req: AuthenticatedRequest, res
   LoggerService.info("[GET] /auth/me");
 
   if (!req.user) return res.sendStatus(401);
-  const user = req.user;
+  const { user } = req;
 
   const userDTO: UserDTO = UsersMapper.toDTO(user);
   return res.status(200).json(userDTO);

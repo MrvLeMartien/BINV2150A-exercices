@@ -19,10 +19,7 @@ usersController.get("/", AuthService.authorize, AuthService.isAdmin, (req: Authe
   LoggerService.info("[GET] /users");
 
   const users = UsersService.getAll();
-  const usersDTO: UserDTO[] = [];
-  for (const user of users) {
-    usersDTO.push(UsersMapper.toDTO(user));
-  }
+  const usersDTO = users.map(user => UsersMapper.toDTO(user));
   return res.status(200).json(usersDTO);
 });
 
@@ -36,13 +33,10 @@ usersController.get("/me/favorites", AuthService.authorize, (req: AuthenticatedR
   LoggerService.info("[GET] /users/me/favorites");
 
   if (!req.user) return res.sendStatus(401);
-  const user = req.user;
+  const { user } = req;
 
   const recipes = RecipesService.getByIds(user.favorites);
-  const recipesDTO: RecipeDTO[] = [];
-  for (const recipe of recipes) {
-    recipesDTO.push(RecipesMapper.toDTO(recipe));
-  }
+  const recipesDTO = recipes.map(recipe => RecipesMapper.toDTO(recipe));
   return res.status(200).json(recipesDTO);
 });
 
@@ -54,14 +48,15 @@ usersController.put("/me/favorites/:recipeId", AuthService.authorize, (req: Auth
   LoggerService.info("[PUT] /users/me/favorites/:recipeId");
 
   if (!req.user) return res.sendStatus(401);
-  const user = req.user;
+  const { user } = req;
 
-  const recipeId = Number(req.params.recipeId);
-  if (!Number.isInteger(recipeId) || recipeId < 1) return res.sendStatus(400);
+  const { recipeId } = req.params;
+  const recId = Number(recipeId);
+  if (!Number.isInteger(recId) || recId < 1) return res.sendStatus(400);
 
-  if (!RecipesService.getById(recipeId)) return res.sendStatus(404);
+  if (!RecipesService.getById(recId)) return res.sendStatus(404);
 
-  if (!UsersService.addFavorite(user.id, recipeId)) return res.sendStatus(500);
+  if (!UsersService.addFavorite(user.id, recId)) return res.sendStatus(500);
 
   return res.sendStatus(204);
 });
@@ -74,12 +69,13 @@ usersController.delete("/me/favorites/:recipeId", AuthService.authorize, (req: A
   LoggerService.info("[DELETE] /users/me/favorites/:recipeId");
 
   if (!req.user) return res.sendStatus(401);
-  const user = req.user;
+  const { user } = req;
 
-  const recipeId = Number(req.params.recipeId);
-  if (!Number.isInteger(recipeId) || recipeId < 1) return res.sendStatus(400);
+  const { recipeId } = req.params;
+  const recId = Number(recipeId);
+  if (!Number.isInteger(recId) || recId < 1) return res.sendStatus(400);
 
-  if (!UsersService.removeFavorite(user.id, recipeId)) return res.sendStatus(500);
+  if (!UsersService.removeFavorite(user.id, recId)) return res.sendStatus(500);
 
   return res.sendStatus(204);
 });
@@ -92,12 +88,13 @@ usersController.get("/:id", AuthService.authorize, (req: AuthenticatedRequest, r
   LoggerService.info("[GET] /users/:id");
 
   if (!req.user) return res.sendStatus(401);
-  const currentUser = req.user;
+  const { user: currentUser } = req;
 
-  const id = Number(req.params.id);
-  if (!Number.isInteger(id) || id < 1) return res.sendStatus(400);
+  const { id } = req.params;
+  const userId = Number(id);
+  if (!Number.isInteger(userId) || userId < 1) return res.sendStatus(400);
 
-  const user = UsersService.getById(id);
+  const user = UsersService.getById(userId);
   if (!user) return res.sendStatus(404);
 
   if (currentUser.id === user.id || currentUser.role === ERole.ADMIN) {
@@ -116,15 +113,16 @@ usersController.delete("/:id", AuthService.authorize, AuthService.isAdmin, (req:
   LoggerService.info("[DELETE] /users/:id");
 
   if (!req.user) return res.sendStatus(401);
-  const currentUser = req.user;
+  const { user: currentUser } = req;
 
-  const id = Number(req.params.id);
-  if (!Number.isInteger(id) || id < 1) return res.sendStatus(400);
-  if (id === currentUser.id) return res.sendStatus(400);
+  const { id } = req.params;
+  const userId = Number(id);
+  if (!Number.isInteger(userId) || userId < 1) return res.sendStatus(400);
+  if (userId === currentUser.id) return res.sendStatus(400);
 
-  if (!UsersService.getById(id)) return res.sendStatus(404);
+  if (!UsersService.getById(userId)) return res.sendStatus(404);
 
-  if (!UsersService.delete(id)) return res.sendStatus(500);
+  if (!UsersService.delete(userId)) return res.sendStatus(500);
 
   return res.sendStatus(204);
 });

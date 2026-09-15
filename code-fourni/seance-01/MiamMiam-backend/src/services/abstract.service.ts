@@ -16,10 +16,7 @@ export abstract class AbstractService {
       LoggerService.error(error);
       return [];
     }
-    const items: OutT[] = [];
-    for (const dbo of dbos) {
-      items.push(mapper(dbo));
-    }
+    const items = dbos.map(dbo => mapper(dbo));
     return items;
   }
 
