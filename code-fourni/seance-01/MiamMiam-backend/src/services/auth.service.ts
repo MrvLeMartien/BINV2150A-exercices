@@ -14,7 +14,6 @@ export class AuthService {
     const user = UsersService.getByEmail(email);
     if (!user) return undefined;
     if (user.password !== password) return undefined;
-
     return generateFakeToken(user.email);
   }
 
@@ -50,9 +49,9 @@ export class AuthService {
    * Middleware (à placer après authorize) : n'autorise que les administrateurs.
    * Répond 403 sinon.
    */
-  static isAdmin(req: AuthenticatedRequest, res: Response, next: NextFunction) {
-    if (req.user === undefined) return res.sendStatus(401);
-    if (req.user.role !== ERole.ADMIN) return res.sendStatus(403);
+  static isAdmin({ user }: AuthenticatedRequest, res: Response, next: NextFunction) {
+    if (user === undefined) return res.sendStatus(401);
+    if (user.role !== ERole.ADMIN) return res.sendStatus(403);
     return next();
   }
 }

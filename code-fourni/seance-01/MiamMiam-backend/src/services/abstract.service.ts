@@ -16,15 +16,12 @@ export abstract class AbstractService {
       LoggerService.error(error);
       return [];
     }
-    const items = dbos.map(dbo => mapper(dbo));
-    return items;
+    //const items = dbos.map(dbo => mapper(dbo));
+    return dbos.map(mapper);
   }
 
   protected static writeDB<From, ToWrite>(items: From[], mapper: (item: From) => ToWrite): boolean {
-    const dbos: ToWrite[] = [];
-    for (const item of items) {
-      dbos.push(mapper(item));
-    }
+    const dbos = items.map(mapper);
     try {
       FilesService.writeFile<ToWrite>(this.dbPath, dbos);
     } catch (error) {
@@ -37,9 +34,9 @@ export abstract class AbstractService {
   /** Prochain id disponible (les ids commencent à 1) */
   protected static getNextId(items: { id: number }[]): number {
     let max = 0;
-    for (const item of items) {
-      if (item.id > max) {
-        max = item.id;
+    for (const { id } of items) {
+      if (id > max) {
+        max = id;
       }
     }
     return max + 1;
