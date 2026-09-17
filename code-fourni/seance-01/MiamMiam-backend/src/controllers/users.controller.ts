@@ -32,8 +32,9 @@ usersController.get("/", AuthService.authorize, AuthService.isAdmin, (req: Authe
 usersController.get("/me/favorites", AuthService.authorize, (req: AuthenticatedRequest, res: Response) => {
   LoggerService.info("[GET] /users/me/favorites");
 
-  if (!req.user) return res.sendStatus(401);
   const { user } = req;
+    if (!user) return res.sendStatus(401);
+
 
   const recipes = RecipesService.getByIds(user.favorites);
   const recipesDTO = recipes.map(recipe => RecipesMapper.toDTO(recipe));
@@ -47,8 +48,9 @@ usersController.get("/me/favorites", AuthService.authorize, (req: AuthenticatedR
 usersController.put("/me/favorites/:recipeId", AuthService.authorize, (req: AuthenticatedRequest, res: Response) => {
   LoggerService.info("[PUT] /users/me/favorites/:recipeId");
 
-  if (!req.user) return res.sendStatus(401);
   const { user } = req;
+  if (!user) return res.sendStatus(401);
+
 
   const { recipeId } = req.params;
   const recId = Number(recipeId);
@@ -68,8 +70,8 @@ usersController.put("/me/favorites/:recipeId", AuthService.authorize, (req: Auth
 usersController.delete("/me/favorites/:recipeId", AuthService.authorize, (req: AuthenticatedRequest, res: Response) => {
   LoggerService.info("[DELETE] /users/me/favorites/:recipeId");
 
-  if (!req.user) return res.sendStatus(401);
   const { user } = req;
+  if (!user) return res.sendStatus(401);
 
   const { recipeId } = req.params;
   const recId = Number(recipeId);

@@ -20,12 +20,6 @@ export class CategoriesService extends AbstractService {
    * Une catégorie par son id, ou undefined si elle n'existe pas
    */
   static getById(id: number): Category | undefined {
-    const categories = this.readCategoriesDB();
-    for (const category of categories) {
-      if (category.id === id) {
-        return category;
-      }
-    }
-    return undefined;
+    return this.readCategoriesDB().find(category => category.id === id);
   }
 }

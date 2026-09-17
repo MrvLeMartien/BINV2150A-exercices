@@ -56,8 +56,8 @@ authController.post("/login", (req: Request, res: Response) => {
 authController.get("/me", AuthService.authorize, (req: AuthenticatedRequest, res: Response) => {
   LoggerService.info("[GET] /auth/me");
 
-  if (!req.user) return res.sendStatus(401);
   const { user } = req;
+  if (!user) return res.sendStatus(401);
 
   const userDTO: UserDTO = UsersMapper.toDTO(user);
   return res.status(200).json(userDTO);

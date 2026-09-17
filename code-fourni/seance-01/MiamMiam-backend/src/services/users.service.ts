@@ -25,26 +25,14 @@ export class UsersService extends AbstractService {
    * Un utilisateur par son id, ou undefined s'il n'existe pas
    */
   static getById(id: number): User | undefined {
-    const users = this.readUsersDB();
-    for (const user of users) {
-      if (user.id === id) {
-        return user;
-      }
-    }
-    return undefined;
+    return this.readUsersDB().find(user => user.id === id);
   }
 
   /**
    * Un utilisateur par son email (insensible à la casse), ou undefined s'il n'existe pas
    */
   static getByEmail(email: string): User | undefined {
-    const users = this.readUsersDB();
-    for (const user of users) {
-      if (user.email.toLowerCase() === email.toLowerCase()) {
-        return user;
-      }
-    }
-    return undefined;
+    return this.readUsersDB().find(user => user.email.toLowerCase() === email.toLowerCase());
   }
 
   /**
@@ -61,10 +49,7 @@ export class UsersService extends AbstractService {
 
     const user: User = {
       id: UsersService.getNextId(users),
-      email: newUser.email,
-      password: newUser.password, // stocké tel quel... pour l'instant
-      firstName: newUser.firstName,
-      lastName: newUser.lastName,
+      ...newUser,
       role: ERole.USER,
       favorites: [],
       createdAt: new Date(),
@@ -101,7 +86,8 @@ export class UsersService extends AbstractService {
     if (!user) return undefined;
 
     if (!user.favorites.includes(recipeId)) {
-      user.favorites.push(recipeId);
+      //user.favorites.push(recipeId); // me semble plus simple
+      user.favorites = [...user.favorites, recipeId];
       user.updatedAt = new Date();
       if (!this.writeUsersDB(users)) return undefined;
     }
@@ -117,12 +103,10 @@ export class UsersService extends AbstractService {
     const user = users.find((u) => u.id === userId);
     if (!user) return undefined;
 
-    const index = user.favorites.indexOf(recipeId);
-    if (index !== -1) {
-      user.favorites.splice(index, 1);
-      user.updatedAt = new Date();
-      if (!this.writeUsersDB(users)) return undefined;
-    }
+
+    user.favorites = user.favorites.filter(id => id !== recipeId);
+    user.updatedAt = new Date();
+    if (!this.writeUsersDB(users)) return undefined;
     return user;
   }
 
@@ -132,11 +116,8 @@ export class UsersService extends AbstractService {
   static removeFavoriteForAll(recipeId: number): boolean {
     const users = this.readUsersDB();
     for (const user of users) {
-      const index = user.favorites.indexOf(recipeId);
-      if (index !== -1) {
-        user.favorites.splice(index, 1);
+        user.favorites = user.favorites.filter(id => id !== recipeId);
         user.updatedAt = new Date();
-      }
     }
     return this.writeUsersDB(users);
   }

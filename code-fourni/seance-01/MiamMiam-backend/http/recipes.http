@@ -143,6 +143,52 @@ Authorization: {{bobLogin.response.body.token}}
   "steps": []
 }
 
+### Modifier partiellement la recette (alice = auteur) -> 200
+PATCH {{server}}/recipes/{{createRecipe.response.body.id}}
+Content-Type: application/json
+Authorization: {{login.response.body.token}}
+
+{
+  "title": "Omelette baveuse aux herbes fraîches",
+  "cookTime": 4
+}
+
+### Modifier la recette d'alice avec le compte de bob -> 403
+PATCH {{server}}/recipes/{{createRecipe.response.body.id}}
+Content-Type: application/json
+Authorization: {{bobLogin.response.body.token}}
+
+{
+  "title": "Titre modifié par un intrus"
+}
+
+### Modifier sans token -> 401
+PATCH {{server}}/recipes/{{createRecipe.response.body.id}}
+Content-Type: application/json
+
+{
+  "title": "Pas connecté"
+}
+
+### Modifier une recette inexistante -> 404
+PATCH {{server}}/recipes/999
+Content-Type: application/json
+Authorization: {{login.response.body.token}}
+
+{
+  "title": "Recette fantôme"
+}
+
+### ID invalide (texte au lieu d'un nombre) -> 400
+PATCH {{server}}/recipes/abc
+Content-Type: application/json
+Authorization: {{login.response.body.token}}
+
+{
+  "title": "ID texte"
+}
+
+
 ### Supprimer la recette d'alice avec le compte de bob -> 403
 DELETE {{server}}/recipes/{{createRecipe.response.body.id}}
 Authorization: {{bobLogin.response.body.token}}

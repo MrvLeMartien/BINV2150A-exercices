@@ -71,8 +71,8 @@ recipesController.get("/:id", (req: Request, res: Response) => {
 recipesController.post("/", AuthService.authorize, (req: AuthenticatedRequest, res: Response) => {
   LoggerService.info("[POST] /recipes");
 
-  if (!req.user) return res.sendStatus(401);
   const { user } = req;
+  if (!user) return res.sendStatus(401);
 
   const body: unknown = req.body;
   if (!isNewRecipeDTO(body)) return res.sendStatus(400);
@@ -93,8 +93,8 @@ recipesController.post("/", AuthService.authorize, (req: AuthenticatedRequest, r
 recipesController.put("/:id", AuthService.authorize, (req: AuthenticatedRequest, res: Response) => {
   LoggerService.info("[PUT] /recipes/:id");
 
-  if (!req.user) return res.sendStatus(401);
   const { user } = req;
+  if (!user) return res.sendStatus(401);
 
   const { id } = req.params;
   const recipeId = Number(id);
@@ -119,9 +119,6 @@ recipesController.put("/:id", AuthService.authorize, (req: AuthenticatedRequest,
 recipesController.patch("/:id", AuthService.authorize, (req: AuthenticatedRequest, res: Response) => {
   LoggerService.info("[PATCH] /recipes/:id");
 
-  if(!req.user) return res.sendStatus(401);
-  const { user } = req;
-
   const { id } = req.params;
   const recipeId = Number(id);
   if(!Number.isInteger(recipeId) || recipeId < 1) return res.sendStatus(400);
@@ -129,9 +126,11 @@ recipesController.patch("/:id", AuthService.authorize, (req: AuthenticatedReques
   const recipe = RecipesService.getById(recipeId);
   if (!recipe) return res.sendStatus(404);
 
+  const { user } = req;
+  if(!user) return res.sendStatus(401);
   if (recipe.authorId !== user.id && user.role !== ERole.ADMIN) return res.sendStatus(403);
-
-  const patched = RecipesService.update(recipeId, req.body);
+  const { body } = req;
+  const patched = RecipesService.patch(recipeId, body);
 
   if (!patched) return res.sendStatus(500);
   
@@ -145,8 +144,8 @@ recipesController.patch("/:id", AuthService.authorize, (req: AuthenticatedReques
 recipesController.delete("/:id", AuthService.authorize, (req: AuthenticatedRequest, res: Response) => {
   LoggerService.info("[DELETE] /recipes/:id");
 
-  if (!req.user) return res.sendStatus(401);
   const { user } = req;
+  if (!user) return res.sendStatus(401);
 
   const { id } = req.params;
   const recipeId = Number(id);

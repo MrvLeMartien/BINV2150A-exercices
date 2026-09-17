@@ -405,5 +405,212 @@
     "author_id": 1,
     "created_at": "2026-09-01T08:00:00.000Z",
     "updated_at": "2026-09-01T08:00:00.000Z"
+  },
+  {
+    "id": 9,
+    "title": "Omelette aux fines herbes",
+    "description": "Le plat de dépannage par excellence.",
+    "prep_time": 5,
+    "cook_time": 5,
+    "servings": 1,
+    "difficulty": 1,
+    "category_id": 2,
+    "tags": [
+      "rapide",
+      "végétarien"
+    ],
+    "ingredients": [
+      {
+        "name": "oeuf",
+        "quantity": 3,
+        "unit": "pièce"
+      },
+      {
+        "name": "ciboulette",
+        "quantity": 1,
+        "unit": "c. à soupe"
+      },
+      {
+        "name": "beurre",
+        "quantity": 10,
+        "unit": "g"
+      }
+    ],
+    "steps": [
+      "Battre les oeufs avec les herbes, saler, poivrer.",
+      "Cuire dans le beurre chaud en ramenant les bords vers le centre.",
+      "Plier et servir baveuse."
+    ],
+    "author_id": 2,
+    "created_at": "2026-09-17T19:20:50.495Z",
+    "updated_at": "2026-09-17T19:20:50.495Z"
+  },
+  {
+    "id": 10,
+    "title": "Omelette aux fines herbes",
+    "description": "Le plat de dépannage par excellence.",
+    "prep_time": 5,
+    "cook_time": 5,
+    "servings": 1,
+    "difficulty": 1,
+    "category_id": 2,
+    "tags": [
+      "rapide",
+      "végétarien"
+    ],
+    "ingredients": [
+      {
+        "name": "oeuf",
+        "quantity": 3,
+        "unit": "pièce"
+      },
+      {
+        "name": "ciboulette",
+        "quantity": 1,
+        "unit": "c. à soupe"
+      },
+      {
+        "name": "beurre",
+        "quantity": 10,
+        "unit": "g"
+      }
+    ],
+    "steps": [
+      "Battre les oeufs avec les herbes, saler, poivrer.",
+      "Cuire dans le beurre chaud en ramenant les bords vers le centre.",
+      "Plier et servir baveuse."
+    ],
+    "author_id": 2,
+    "created_at": "2026-09-17T19:20:52.638Z",
+    "updated_at": "2026-09-17T19:20:52.638Z"
+  },
+  {
+    "id": 11,
+    "title": "Omelette aux fines herbes",
+    "description": "Le plat de dépannage par excellence.",
+    "prep_time": 5,
+    "cook_time": 5,
+    "servings": 1,
+    "difficulty": 1,
+    "category_id": 2,
+    "tags": [
+      "rapide",
+      "végétarien"
+    ],
+    "ingredients": [
+      {
+        "name": "oeuf",
+        "quantity": 3,
+        "unit": "pièce"
+      },
+      {
+        "name": "ciboulette",
+        "quantity": 1,
+        "unit": "c. à soupe"
+      },
+      {
+        "name": "beurre",
+        "quantity": 10,
+        "unit": "g"
+      }
+    ],
+    "steps": [
+      "Battre les oeufs avec les herbes, saler, poivrer.",
+      "Cuire dans le beurre chaud en ramenant les bords vers le centre.",
+      "Plier et servir baveuse."
+    ],
+    "author_id": 2,
+    "created_at": "2026-09-17T19:20:53.183Z",
+    "updated_at": "2026-09-17T19:20:53.183Z"
+  },
+  {
+    "id": 12,
+    "title": "Omelette baveuse aux herbes fraîches",
+    "description": "Le plat de dépannage par excellence, version gourmande.",
+    "prep_time": 5,
+    "cook_time": 4,
+    "servings": 1,
+    "difficulty": 1,
+    "category_id": 2,
+    "tags": [
+      "rapide",
+      "végétarien",
+      "fromage"
+    ],
+    "ingredients": [
+      {
+        "name": "oeuf",
+        "quantity": 3,
+        "unit": "pièce"
+      },
+      {
+        "name": "ciboulette",
+        "quantity": 1,
+        "unit": "c. à soupe"
+      },
+      {
+        "name": "gruyère râpé",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "beurre",
+        "quantity": 10,
+        "unit": "g"
+      }
+    ],
+    "steps": [
+      "Battre les oeufs avec les herbes, saler, poivrer.",
+      "Cuire dans le beurre chaud, parsemer de fromage.",
+      "Plier et servir baveuse."
+    ],
+    "author_id": 2,
+    "created_at": "2026-09-17T19:20:53.764Z",
+    "updated_at": "2026-09-17T19:21:32.879Z"
+  },
+  {
+    "id": 13,
+    "title": "Omelette baveuse aux herbes fraîches",
+    "description": "Le plat de dépannage par excellence, version gourmande.",
+    "prep_time": 5,
+    "cook_time": 4,
+    "servings": 1,
+    "difficulty": 1,
+    "category_id": 2,
+    "tags": [
+      "rapide",
+      "végétarien",
+      "fromage"
+    ],
+    "ingredients": [
+      {
+        "name": "oeuf",
+        "quantity": 3,
+        "unit": "pièce"
+      },
+      {
+        "name": "ciboulette",
+        "quantity": 1,
+        "unit": "c. à soupe"
+      },
+      {
+        "name": "gruyère râpé",
+        "quantity": 30,
+        "unit": "g"
+      },
+      {
+        "name": "beurre",
+        "quantity": 10,
+        "unit": "g"
+      }
+    ],
+    "steps": [
+      "Battre les oeufs avec les herbes, saler, poivrer.",
+      "Cuire dans le beurre chaud, parsemer de fromage.",
+      "Plier et servir baveuse."
+    ],
+    "author_id": 2,
+    "created_at": "2026-09-17T19:21:45.457Z",
+    "updated_at": "2026-09-17T19:23:06.906Z"
   }
 ]

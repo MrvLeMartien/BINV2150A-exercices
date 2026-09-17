@@ -14,8 +14,7 @@ categoriesController.get("/", (req: Request, res: Response) => {
   LoggerService.info("[GET] /categories");
 
   const categories = CategoriesService.getAll();
-  const categoriesDTO = categories.map(caregory => CategoriesMapper.toDTO(caregory))
-  // autre tech : const categoriesDTO = categories.map(CategoriesMapper.toDTO);
+  const categoriesDTO = categories.map(CategoriesMapper.toDTO);
   return res.status(200).json(categoriesDTO);
 });
 

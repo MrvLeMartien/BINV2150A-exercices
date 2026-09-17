@@ -94,3 +94,21 @@ export interface RecipeFilter {
   ingredient?: string; // nom d'ingrédient
   maxPrepTime?: number; // prepTime + cookTime <= maxPrepTime
 }
+
+/** ceci est généré par l'ia pour apprendre d'autre chose 
+* Chaque champ avec ? peut être fourni ou omis par le client. 
+* id, authorId, createdAt et updatedAt ne s'y trouvent pas, ce qui empêche le client d'y toucher depuis le corps de la requête.
+/** Corps de PATCH /recipes/:id (tous les champs sont optionnels) */
+export interface UpdatedRecipeDTO {
+  title?: string;
+  description?: string;
+  imageUrl?: string;
+  prepTime?: number;
+  cookTime?: number;
+  servings?: number;
+  difficulty?: number;
+  categoryId?: number;
+  tags?: string[];
+  ingredients?: Ingredient[];
+  steps?: string[];
+}

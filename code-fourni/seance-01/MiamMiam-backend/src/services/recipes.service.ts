@@ -1,5 +1,5 @@
 import { RecipesMapper } from "../mappers/recipes.mapper";
-import { NewRecipe, Recipe, RecipeDBO, RecipeFilter } from "../models/recipe.model";
+import { NewRecipe, Recipe, RecipeDBO, RecipeFilter, UpdatedRecipeDTO } from "../models/recipe.model";
 import { AbstractService } from "./abstract.service";
 import { UsersService } from "./users.service";
 
@@ -62,27 +62,14 @@ export class RecipesService extends AbstractService {
    * Une recette par son id, ou undefined si elle n'existe pas
    */
   static getById(id: number): Recipe | undefined {
-    const recipes = this.readRecipesDB();
-    for (const recipe of recipes) {
-      if (recipe.id === id) {
-        return recipe;
-      }
-    }
-    return undefined;
+    return this.readRecipesDB().find(recipe => recipe.id === id);
   }
 
   /**
    * Les recettes dont les ids sont fournis (ex : favoris d'un utilisateur)
    */
   static getByIds(ids: number[]): Recipe[] {
-    const recipes = this.readRecipesDB();
-    const result: Recipe[] = [];
-    for (const recipe of recipes) {
-      if (ids.includes(recipe.id)) {
-        result.push(recipe);
-      }
-    }
-    return result;
+    return this.readRecipesDB().filter(recipe => ids.includes(recipe.id));
   }
 
   /**
@@ -93,19 +80,8 @@ export class RecipesService extends AbstractService {
     const recipes = this.readRecipesDB();
 
     const recipe: Recipe = {
+      ...newRecipe,
       id: RecipesService.getNextId(recipes),
-      title: newRecipe.title,
-      description: newRecipe.description,
-      imageUrl: newRecipe.imageUrl,
-      prepTime: newRecipe.prepTime,
-      cookTime: newRecipe.cookTime,
-      servings: newRecipe.servings,
-      difficulty: newRecipe.difficulty,
-      categoryId: newRecipe.categoryId,
-      tags: newRecipe.tags,
-      ingredients: newRecipe.ingredients,
-      steps: newRecipe.steps,
-      authorId: newRecipe.authorId,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -121,25 +97,42 @@ export class RecipesService extends AbstractService {
    * Remplace le contenu d'une recette existante (l'id, l'auteur et la date de création sont conservés).
    * @returns la recette mise à jour, ou undefined si elle n'existe pas
    */
-  static update(id: number, updatedRecipe: NewRecipe): Recipe | undefined {
+  static update(id: number, updatedRecipe: UpdatedRecipeDTO): Recipe | undefined {
     const recipes = this.readRecipesDB();
     const index = recipes.findIndex((recipe) => recipe.id === id);
     if (index === -1) return undefined;
 
     const existing = recipes[index];
     const recipe: Recipe = {
+      ...existing,
+      ...updatedRecipe,
       id: existing.id,
-      title: updatedRecipe.title,
-      description: updatedRecipe.description,
-      imageUrl: updatedRecipe.imageUrl,
-      prepTime: updatedRecipe.prepTime,
-      cookTime: updatedRecipe.cookTime,
-      servings: updatedRecipe.servings,
-      difficulty: updatedRecipe.difficulty,
-      categoryId: updatedRecipe.categoryId,
-      tags: updatedRecipe.tags,
-      ingredients: updatedRecipe.ingredients,
-      steps: updatedRecipe.steps,
+      authorId: existing.authorId,
+      createdAt: existing.createdAt,
+      updatedAt: new Date(),
+    };
+
+    recipes[index] = recipe;
+    if (!this.writeRecipesDB(recipes)) {
+      return undefined;
+    }
+    return recipe;
+  }
+
+  /**
+   * Met à jour partiellement une recette existante (l'id, l'auteur et la date de création sont conservés).
+   * @returns la recette mise à jour, ou undefined si elle n'existe pas
+   */
+  static patch(id: number, updatedRecipe: Recipe): Recipe | undefined {
+    const recipes = this.readRecipesDB();
+    const index = recipes.findIndex((recipe) => recipe.id === id);
+    if (index === -1) return undefined;
+
+    const existing = recipes[index];
+    const recipe: Recipe = {
+      ...existing,
+      ...updatedRecipe,
+      id: existing.id,
       authorId: existing.authorId,
       createdAt: existing.createdAt,
       updatedAt: new Date(),
