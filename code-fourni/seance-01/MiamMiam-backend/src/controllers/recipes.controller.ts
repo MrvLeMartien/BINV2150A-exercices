@@ -116,6 +116,28 @@ recipesController.put("/:id", AuthService.authorize, (req: AuthenticatedRequest,
   return res.sendStatus(204);
 });
 
+recipesController.patch("/:id", AuthService.authorize, (req: AuthenticatedRequest, res: Response) => {
+  LoggerService.info("[PATCH] /recipes/:id");
+
+  if(!req.user) return res.sendStatus(401);
+  const { user } = req;
+
+  const { id } = req.params;
+  const recipeId = Number(id);
+  if(!Number.isInteger(recipeId) || recipeId < 1) return res.sendStatus(400);
+
+  const recipe = RecipesService.getById(recipeId);
+  if (!recipe) return res.sendStatus(404);
+
+  if (recipe.authorId !== user.id && user.role !== ERole.ADMIN) return res.sendStatus(403);
+
+  const patched = RecipesService.update(recipeId, req.body);
+
+  if (!patched) return res.sendStatus(500);
+  
+  return res.status(200).send(RecipesMapper.toDTO(patched));
+});
+
 /**
  * DELETE /recipes/:id
  * Supprime une recette (auteur ou admin uniquement)
