@@ -33,12 +33,6 @@ export abstract class AbstractService {
 
   /** Prochain id disponible (les ids commencent à 1) */
   protected static getNextId(items: { id: number }[]): number {
-    let max = 0;
-    for (const { id } of items) {
-      if (id > max) {
-        max = id;
-      }
-    }
-    return max + 1;
+    return Math.max(0, ...items.map(item => item.id)) + 1;
   }
 }

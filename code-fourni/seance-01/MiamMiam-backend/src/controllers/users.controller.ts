@@ -19,7 +19,7 @@ usersController.get("/", AuthService.authorize, AuthService.isAdmin, (req: Authe
   LoggerService.info("[GET] /users");
 
   const users = UsersService.getAll();
-  const usersDTO = users.map(user => UsersMapper.toDTO(user));
+  const usersDTO = users.map(UsersMapper.toDTO);
   return res.status(200).json(usersDTO);
 });
 
@@ -37,7 +37,7 @@ usersController.get("/me/favorites", AuthService.authorize, (req: AuthenticatedR
 
 
   const recipes = RecipesService.getByIds(user.favorites);
-  const recipesDTO = recipes.map(recipe => RecipesMapper.toDTO(recipe));
+  const recipesDTO = recipes.map(RecipesMapper.toDTO);
   return res.status(200).json(recipesDTO);
 });
 

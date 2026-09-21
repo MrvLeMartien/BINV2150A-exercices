@@ -58,7 +58,8 @@ authController.get("/me", AuthService.authorize, (req: AuthenticatedRequest, res
 
   const { user } = req;
   if (!user) return res.sendStatus(401);
-
-  const userDTO: UserDTO = UsersMapper.toDTO(user);
+  const getUser = UsersService.getByEmail(user.email);
+  if(!getUser) return res.sendStatus(404);
+  const userDTO: UserDTO = UsersMapper.toDTO(getUser);
   return res.status(200).json(userDTO);
 });

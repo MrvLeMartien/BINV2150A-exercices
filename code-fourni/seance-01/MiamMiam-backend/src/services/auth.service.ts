@@ -1,7 +1,7 @@
 import { NextFunction, Response } from "express";
 import { AuthenticatedRequest } from "../models/auth.model";
 import { ERole, User } from "../models/user.model";
-import { generateFakeToken, validateFakeToken } from "../utils/auth";
+import { generateToken, verifyToken } from "../utils/auth";
 import { LoggerService } from "./logger.service";
 import { UsersService } from "./users.service";
 
@@ -14,7 +14,11 @@ export class AuthService {
     const user = UsersService.getByEmail(email);
     if (!user) return undefined;
     if (user.password !== password) return undefined;
-    return generateFakeToken(user.email);
+    return generateToken({
+      id : user.id,
+      email : user.email,
+      role : user.role
+    });
   }
 
   /**
@@ -28,20 +32,26 @@ export class AuthService {
       return res.sendStatus(401);
     }
 
-    let user: User | undefined = undefined;
-    try {
-      const email = validateFakeToken(token);
-      user = UsersService.getByEmail(email);
-    } catch (error) {
-      LoggerService.error(error);
-    }
+    // let user: User | undefined = undefined;
+    // try {
+    //   const email = verifyToken(token);
+    //   user = UsersService.getByEmail(email);
+    // } catch (error) {
+    //   LoggerService.error(error);
+    // }
 
-    if (!user) {
-      LoggerService.error("Invalid token");
-      return res.sendStatus(401);
-    }
+    // if (!user) {
+    //   LoggerService.error("Invalid token");
+    //   return res.sendStatus(401);
+    // }
 
-    req.user = user; // disponible dans les middlewares et routes suivants
+    // req.user = user; // disponible dans les middlewares et routes suivants
+    // return next();
+
+    const payload = verifyToken(token);
+    if (!payload) return res.sendStatus(401);
+
+    req.user = payload; // disponible dans les middlewares et routes suivants
     return next();
   }
 
@@ -50,7 +60,7 @@ export class AuthService {
    * Répond 403 sinon.
    */
   static isAdmin({ user }: AuthenticatedRequest, res: Response, next: NextFunction) {
-    if (user === undefined) return res.sendStatus(401);
+    if (!user) return res.sendStatus(401);
     if (user.role !== ERole.ADMIN) return res.sendStatus(403);
     return next();
   }
