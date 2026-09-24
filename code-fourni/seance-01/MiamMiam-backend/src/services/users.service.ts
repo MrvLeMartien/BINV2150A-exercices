@@ -2,6 +2,7 @@ import { UsersMapper } from "../mappers/users.mapper";
 import { ERole, NewUser, User, UserDBO } from "../models/user.model";
 import { AbstractService } from "./abstract.service";
 import { LoggerService } from "./logger.service";
+import bcrypt from "bcrypt"
 
 export class UsersService extends AbstractService {
   protected static dbPath: string = "data/users.json";
@@ -39,7 +40,7 @@ export class UsersService extends AbstractService {
    * Crée un utilisateur (rôle "user" par défaut).
    * @returns l'utilisateur créé, ou undefined si l'email est déjà utilisé
    */
-  static create(newUser: NewUser): User | undefined {
+  static async create(newUser: NewUser): Promise<User | undefined> {
     const users = this.readUsersDB();
 
     if (this.getByEmail(newUser.email)) {
@@ -50,6 +51,7 @@ export class UsersService extends AbstractService {
     const user: User = {
       id: UsersService.getNextId(users),
       ...newUser,
+      password: await bcrypt.hash(newUser.password, 10),
       role: ERole.USER,
       favorites: [],
       createdAt: new Date(),

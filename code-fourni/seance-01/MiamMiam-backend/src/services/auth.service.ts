@@ -4,16 +4,18 @@ import { ERole, User } from "../models/user.model";
 import { generateToken, verifyToken } from "../utils/auth";
 import { LoggerService } from "./logger.service";
 import { UsersService } from "./users.service";
+import bcrypt from "bcrypt";
 
 export class AuthService {
   /**
    * Vérifie les identifiants.
    * @returns un token si l'email et le mot de passe sont corrects, undefined sinon
    */
-  static login(email: string, password: string): string | undefined {
+  static async login(email: string, password: string): Promise<string | undefined> {
     const user = UsersService.getByEmail(email);
-    if (!user) return undefined;
-    if (user.password !== password) return undefined;
+    if (!user) return undefined; // Utilisateur non trouvé
+    const isMatch = await bcrypt.compare(password, user.password); // TODO
+    if (!isMatch) return undefined; // Mot de passe incorrect
     return generateToken({
       id : user.id,
       email : user.email,
@@ -31,22 +33,6 @@ export class AuthService {
       LoggerService.error("Missing Authorization header");
       return res.sendStatus(401);
     }
-
-    // let user: User | undefined = undefined;
-    // try {
-    //   const email = verifyToken(token);
-    //   user = UsersService.getByEmail(email);
-    // } catch (error) {
-    //   LoggerService.error(error);
-    // }
-
-    // if (!user) {
-    //   LoggerService.error("Invalid token");
-    //   return res.sendStatus(401);
-    // }
-
-    // req.user = user; // disponible dans les middlewares et routes suivants
-    // return next();
 
     const payload = verifyToken(token);
     if (!payload) return res.sendStatus(401);

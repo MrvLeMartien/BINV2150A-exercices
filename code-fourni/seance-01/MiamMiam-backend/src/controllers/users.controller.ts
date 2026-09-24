@@ -34,9 +34,9 @@ usersController.get("/me/favorites", AuthService.authorize, (req: AuthenticatedR
 
   const { user } = req;
     if (!user) return res.sendStatus(401);
-
-
-  const recipes = RecipesService.getByIds(user.favorites);
+  const userr = UsersService.getById(user.id);
+      if (!userr) return res.sendStatus(401);
+  const recipes = RecipesService.getByIds(userr?.favorites);
   const recipesDTO = recipes.map(RecipesMapper.toDTO);
   return res.status(200).json(recipesDTO);
 });

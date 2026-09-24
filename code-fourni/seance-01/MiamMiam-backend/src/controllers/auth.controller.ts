@@ -13,14 +13,14 @@ export const authController = Router();
  * POST /auth/register
  * Crée un compte et renvoie un token (l'utilisateur est directement connecté)
  */
-authController.post("/register", (req: Request, res: Response) => {
+authController.post("/register", async (req: Request, res: Response) => {
   LoggerService.info("[POST] /auth/register");
 
   const body: unknown = req.body;
   if (!isNewUserDTO(body)) return res.sendStatus(400);
 
   const newUser = UsersMapper.fromNewDTO(body);
-  const user = UsersService.create(newUser);
+  const user = await UsersService.create(newUser);
   if (!user) return res.sendStatus(409); // email déjà utilisé
 
   const token = AuthService.login(user.email, user.password);

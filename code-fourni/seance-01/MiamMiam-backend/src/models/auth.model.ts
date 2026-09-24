@@ -1,5 +1,5 @@
 import { Request } from "express";
-import { User } from "./user.model";
+import { ERole, User } from "./user.model";
 
 /**
  * Requête Express enrichie par le middleware AuthService.authorize :
@@ -14,5 +14,5 @@ export interface AuthenticatedRequest extends Request {
 export interface TokenPayload {
   id: number;
   email: string;
-  role: "user" | "admin";
+  role: ERole.USER | ERole.ADMIN;
 }
