@@ -1,11 +1,13 @@
-import RecipeCard from "./components/RecipeCard";
+import PageLayout from "./components/PageLayout";
+import RecipeList from "./components/RecipeList";
+
 
 const App = () => {
     return (
         <div className="app">
-            <h1>MiamMiam </h1>
-            <RecipeCard />
-            <RecipeCard />
+            <PageLayout title="MiamMiam">
+                <RecipeList />
+            </PageLayout>
         </div>
     );
 };
