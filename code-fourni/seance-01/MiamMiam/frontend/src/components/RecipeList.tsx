@@ -23,6 +23,26 @@ const recipeList = () => {
             duration={10}
             difficulty={1}
         />
+        <RecipeCard 
+            title="Tarte"
+            imageUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRS-kxlqJI0FcHYDBcbeVEe7a0k_kLl6CxX82TRX61Kqg&s=10"
+            description="Tarte au pomme" 
+            duration={10}
+            difficulty={1}
+        />
+        <RecipeCard 
+            title="Steak"
+            imageUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRpQ8YkcpwnpDWJAcqh7B-DbowYHdg2Ebi4SYDXxTEleQ&s=10"
+            duration={45}
+            difficulty={5}
+        />
+        <RecipeCard 
+            title="Confiture"
+            imageUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNSxD5Y0NBR_YnRxidq67qg6A9_BLVn5JIFPfspRdhew&s=10"
+            description="Confiture à la cerise" 
+            duration={40}
+            difficulty={4}
+        />
         </>
 )};
 
