@@ -1,9 +1,4 @@
-// const recipe = {
-//     title: "Pâtes Carbonara",
-//     imageUrl: "https:/images.unsplash.com/photo-1612874742237-6526221588e3?w=800",
-//     duration: 20,
-//     difficulty: "Facile",
-// };
+import { Card,Chip, CardContent, CardMedia, Rating, Typography } from "@mui/material";
 
 interface RecipeCardProps {
     title : string;
@@ -15,17 +10,24 @@ interface RecipeCardProps {
 
 const RecipeCard = ({title, imageUrl, description, duration, difficulty} : RecipeCardProps) => {
     return (
-        <div className="recipe-card">
-            <h2>{title}</h2>
-            <img src={imageUrl} alt={title} style={{ width: "200px", height: "150px", objectFit: "cover" }} />
-            {description && <p>{description}</p>}
-            <p>
-                <strong>Durée: </strong> {duration} minutes
-            </p>
-            <p>
-                <strong>Difficulté: </strong> {difficulty}/5
-            </p>
-        </div>
+        <Card sx={{ maxWidth: 345 }}>
+            <CardContent>
+                <Typography variant="h6" component="h2">
+                    {title}
+                </Typography>
+                <CardMedia component="img" width="200" height="150" image={imageUrl} alt={title}/>
+                <Typography variant="body2" color="text.secondary">
+                    {description && <p>{description}</p>}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                    {duration} min
+                </Typography>
+                <Typography>
+                    <Chip label="Plat" color="primary" size="small" />
+                    <Rating value={difficulty} max={5} readOnly/>
+                </Typography>
+            </CardContent>
+        </Card>
     );
 };
 
