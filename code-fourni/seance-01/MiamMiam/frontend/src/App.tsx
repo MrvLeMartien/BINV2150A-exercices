@@ -5,21 +5,20 @@ import { recipes } from "./data/recipes";
 import RecipeDetail from "./components/RecipeDetail";
 
 const theme = createTheme({
-    palette:{
+    palette: {
         primary: {
-            main: "#e65100"
+            main: "#8A3324",
         },
     },
 });
-
 const App = () => {
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />
-                <PageLayout title="MiamMiam">
-                    <RecipeList />
-                    <RecipeDetail recipe={recipes[0]} /> 
-                </PageLayout>
+            <PageLayout title="MiamMiam">
+                <RecipeList />
+                <RecipeDetail recipe={recipes[0]} />
+            </PageLayout>
         </ThemeProvider>
     );
 };
