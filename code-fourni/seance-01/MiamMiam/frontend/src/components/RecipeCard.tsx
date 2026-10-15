@@ -1,31 +1,35 @@
-import { Card,Chip, CardContent, CardMedia, Rating, Typography } from "@mui/material";
+import { Card,Chip, CardContent, CardMedia, Rating, Typography, Stack } from "@mui/material";
+import type { Recipe } from "../models/recipe";
+import { categories } from "../data/categories";
 
-interface RecipeCardProps {
-    title : string;
-    imageUrl: string;
-    description?: string;
-    duration: number;
-    difficulty: number;
+export interface RecipeCardProps {
+    recipe :Recipe;  
 }
 
-const RecipeCard = ({title, imageUrl, description, duration, difficulty} : RecipeCardProps) => {
+const RecipeCard = ({recipe} : RecipeCardProps) => {
     return (
-        <Card sx={{ maxWidth: 345 }}>
+        <Card>
+            <CardMedia component="img" width="200" height="150" image={recipe.imageUrl} alt={recipe.title}/>
             <CardContent>
                 <Typography variant="h6" component="h2">
-                    {title}
+                    {recipe.title}
                 </Typography>
-                <CardMedia component="img" width="200" height="150" image={imageUrl} alt={title}/>
+
+                {recipe.description && (<Typography variant="body2" color="text.secondary">
+                    {recipe.description}
+                </Typography>)}
+
                 <Typography variant="body2" color="text.secondary">
-                    {description && <p>{description}</p>}
+                    {recipe.prepTime} min
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
-                    {duration} min
-                </Typography>
-                <Typography>
-                    <Chip label="Plat" color="primary" size="small" />
-                    <Rating value={difficulty} max={5} readOnly/>
-                </Typography>
+
+                <Stack>
+                    {recipe.categoryId} && <Chip label={categories.map(cat => cat.id == recipe.categoryId && cat.name)} color="primary" size="small" />
+                    <Stack spacing={2}>
+                        {recipe.tags.map(tag => <Chip key={tag} color="primary" size="small" />)}
+                    </Stack>
+                    <Rating value={recipe.difficulty} max={5} readOnly />   
+                </Stack>
             </CardContent>
         </Card>
     );
