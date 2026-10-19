@@ -6,9 +6,11 @@ import {
     Rating,
     Typography,
     Stack,
+    CardActions,
 } from "@mui/material";
 import type { Recipe } from "../models/recipe";
 import { categories } from "../data/categories";
+import FavoriteButton from "./FavoriteButton";
 
 export interface RecipeCardProps {
     recipe: Recipe;
@@ -23,8 +25,8 @@ const RecipeCard = ({ recipe }: RecipeCardProps) => {
         <Card>
             <CardMedia
                 component="img"
-                width="200"
-                height="150"
+                width={200}
+                height={150}
                 image={recipe.imageUrl}
                 alt={recipe.title}
             />
@@ -34,14 +36,12 @@ const RecipeCard = ({ recipe }: RecipeCardProps) => {
                 </Typography>
 
                 {recipe.description && (
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant="body2">
                         {recipe.description}
                     </Typography>
                 )}
 
-                <Typography variant="body2" color="text.secondary">
-                    {recipe.prepTime} min
-                </Typography>
+                <Typography variant="body2">{recipe.prepTime} min</Typography>
 
                 <Stack>
                     {categoryName && (
@@ -60,8 +60,15 @@ const RecipeCard = ({ recipe }: RecipeCardProps) => {
                         />
                     ))}
                 </Stack>
+
+                <Typography variant="body2">Difficulté</Typography>
                 <Rating value={recipe.difficulty} max={5} readOnly />
             </CardContent>
+
+            <CardActions>
+                <FavoriteButton />
+            </CardActions>
+            
         </Card>
     );
 };

@@ -17,5 +17,5 @@ const recipeList = () => {
         </Grid>
     );
 };
-
+    
 export default recipeList;

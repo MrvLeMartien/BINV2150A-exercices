@@ -11,20 +11,16 @@ const PageLayout = ({ title, children }: PageLayoutProps) => {
     return (
         <>
             <AppBar position="static">
-                <Toolbar
-                    sx={{
-                        justifyContent: "space-between",
-                    }}
-                >
+                <Toolbar>
                     <img
                         src={miammiam}
                         alt="Logo MiamMiam"
                         style={{ width: "auto", height: 150 }}
                     />
                     <Typography
-                        variant="h6"
-                        component="h1"
-                        sx={{ fontWeight: 700, letterSpacing: 1.2 }}
+                        sx={{
+                            width: { xs: "100%", sm: "50%", md: "33%" },
+                        }}
                     >
                         {title}
                     </Typography>
