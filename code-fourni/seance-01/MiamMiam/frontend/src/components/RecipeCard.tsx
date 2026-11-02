@@ -68,7 +68,6 @@ const RecipeCard = ({ recipe }: RecipeCardProps) => {
             <CardActions>
                 <FavoriteButton />
             </CardActions>
-            
         </Card>
     );
 };
